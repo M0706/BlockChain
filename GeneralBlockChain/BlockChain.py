@@ -25,6 +25,19 @@ class BlockChain:
     def get_previousblock(self):
         return self.chain[-1]
 
+    def proof_of_work(self, previous_proof):
+        new_proof = 1
+        check_proof = False
+        while(check_proof==False):
+            hash_operation = hashlib.sha256(str(new_proof**2 - previous_hash**2).encode()).hexdigest()
+            if hash_operation[:4] = '0000':
+                check_proof = True
+            else:
+                new_proof = new_proof+1
+
+
+        
+
 
 
 
