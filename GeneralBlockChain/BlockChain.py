@@ -30,10 +30,17 @@ class BlockChain:
         check_proof = False
         while(check_proof==False):
             hash_operation = hashlib.sha256(str(new_proof**2 - previous_hash**2).encode()).hexdigest()
+            #check that target. Assume target is leading 4 zeroes
             if hash_operation[:4] = '0000':
                 check_proof = True
             else:
                 new_proof = new_proof+1
+
+    def hash(self, block):
+        encoded_block = json.dumps(block,sort_keys=True).encode()
+        return hashlib.sha256(encoded_block).hexdigest()
+
+
 
 
         
