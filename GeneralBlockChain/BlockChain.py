@@ -60,18 +60,41 @@ class BlockChain:
             current_block_index +=1
         
         return True
-        
-
-
-        
-
-
-
-
-
-        
-
 
 
 
 #Mining the block 
+
+app = Flask(__name__)
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
+blockchain = BlockChain()
+
+@app.route('/mine_block', methods = ["GET"])
+
+#mining the block
+def mine_block():
+    previous_block = blockchain.get_previousblock()
+    previous_proof = previous_block['proof']
+    proof = blockchain.proof_of_work(previous_proof)
+    previous_hash = blockchain.hash(previous_block)
+    new_block = blockchain.create_block(proof,previous_hash) 
+    response = {"message":"Congragulations, You just mined a block" , 
+                'index': new_block['index'],
+                'TimeStamp': new_block['TimeStamp'],
+                'proof': block['proof'], 
+                'previous_hash': block['previous_hash'],
+                'data':block['data']
+                }
+    
+    return jsonify(response), 200
+
+
+# getting the full blockchain
+@app.route('/get_chain', methods = ["GET"])
+def get_chain():
+    response = {'chain': blockchain.chain,
+                'length':len(blockchain.chain)}
+    
+    return jsonify(response), 200
+    
+    
