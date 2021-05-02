@@ -45,7 +45,7 @@ class BlockChain:
         while(current_block_index < len(chain)):
             current_block = chain[current_block_index]
             # check if the hashes match that is chain is connected
-            if(block[previous_hash] != self.hash(previous_block)):
+            if(current_block[previous_hash] != self.hash(previous_block)):
                 return False
             
             #check if the proofs are valid
@@ -95,6 +95,20 @@ def get_chain():
                 'length':len(blockchain.chain)}
     
     return jsonify(response), 200
+
+@app.route('/is_chain_valid', methods = ["GET"])
+def is_chain_valid():
+    is_valid = blockchain.is_chain_valid(blockchain.chain)
+    if is_valid:
+        response={"message":"All good, the blockchain is valid"}
+    else:
+        response={"message":"Invalid Blockchain"}
+    
+    return jsonify(response), 200
+
+
+        
+        
 
 #Running the app
 app.run(host='0.0.0.0' , port=5000)
