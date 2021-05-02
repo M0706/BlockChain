@@ -12,13 +12,12 @@ class BlockChain:
         self.chain = []
         self.create_block(proof=1,previous_hash='0')
     
-    def create_block(self,proof,previous_hash):
-        block = {'index': len(self.chain)+1,
-                'TimeStamp': datetime.datetime.now(),
-                'proof': proof, 
-                'previous_hash': previous_hash,
-                'data':"Dummy data"
-            }
+    def create_block(self, proof, previous_hash):
+        block = {'index': len(self.chain) + 1,
+                 'timestamp': str(datetime.datetime.now()),
+                 'proof': proof,
+                 'previous_hash': previous_hash,
+                 'data':'dummy data'}
         self.chain.append(block)
         return block
 
@@ -28,16 +27,16 @@ class BlockChain:
     def proof_of_work(self, previous_proof):
         new_proof = 1
         check_proof = False
-        while(check_proof==False):
-            hash_operation = hashlib.sha256(str(new_proof**2 - previous_hash**2).encode()).hexdigest()
-            #check that target. Assume target is leading 4 zeroes
-            if hash_operation[:4] = '0000':
+        while check_proof is False:
+            hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()
+            if hash_operation[:4] == '0000':
                 check_proof = True
             else:
-                new_proof = new_proof+1
+                new_proof += 1
+        return new_proof
 
     def hash(self, block):
-        encoded_block = json.dumps(block,sort_keys=True).encode()
+        encoded_block = json.dumps(block, sort_keys = True).encode()
         return hashlib.sha256(encoded_block).hexdigest()
 
     def is_chain_valid(self, chain):
@@ -80,10 +79,10 @@ def mine_block():
     new_block = blockchain.create_block(proof,previous_hash) 
     response = {"message":"Congragulations, You just mined a block" , 
                 'index': new_block['index'],
-                'TimeStamp': new_block['TimeStamp'],
-                'proof': block['proof'], 
-                'previous_hash': block['previous_hash'],
-                'data':block['data']
+                'timestamp': new_block['timestamp'],
+                'proof': new_block['proof'], 
+                'previous_hash': new_block['previous_hash'],
+                'data':new_block['data']
                 }
     
     return jsonify(response), 200
@@ -96,5 +95,8 @@ def get_chain():
                 'length':len(blockchain.chain)}
     
     return jsonify(response), 200
+
+#Running the app
+app.run(host='0.0.0.0' , port=5000)
     
     
